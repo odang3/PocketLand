@@ -34,6 +34,10 @@ button {
   font: inherit;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .app-shell {
   min-height: 100vh;
   padding: 24px 18px;
@@ -87,6 +91,13 @@ h1 {
   line-height: 1.04;
 }
 
+h2 {
+  margin: 0;
+  color: #503522;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
 .subtitle {
   margin: 12px 0 0;
   color: #7a6048;
@@ -125,6 +136,10 @@ h1 {
   text-align: right;
 }
 
+.status-card--wide {
+  grid-column: 1 / -1;
+}
+
 .action-stack {
   display: grid;
   gap: 12px;
@@ -160,6 +175,329 @@ h1 {
   box-shadow: 0 6px 0 rgba(80, 53, 34, 0.25);
 }
 
+.page-screen {
+  display: flex;
+  width: min(100%, 430px);
+  min-height: calc(100vh - 48px);
+  margin: 0 auto;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.page-header,
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.page-header h1 {
+  font-size: 2.1rem;
+}
+
+.back-button {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 16px;
+  color: #3b2f23;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 8px 18px rgba(96, 139, 150, 0.14);
+  cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.page-description {
+  margin: 0;
+  color: #7a6048;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.collection-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.collection-summary div {
+  display: grid;
+  gap: 5px;
+  min-height: 70px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 22px rgba(96, 139, 150, 0.12);
+}
+
+.collection-summary span {
+  color: #7a6048;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.collection-summary strong {
+  color: #503522;
+  font-size: 1.08rem;
+}
+
+.character-list {
+  display: grid;
+  gap: 14px;
+}
+
+.character-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 30px rgba(96, 139, 150, 0.14);
+}
+
+.character-card.is-selected {
+  border-color: #ffbf3d;
+  box-shadow:
+    0 0 0 4px rgba(255, 207, 95, 0.3),
+    0 14px 30px rgba(96, 139, 150, 0.14);
+}
+
+.character-card.is-locked {
+  filter: saturate(0.88);
+}
+
+.character-card--paw {
+  background: linear-gradient(135deg, rgba(255, 246, 223, 0.92), rgba(255, 231, 167, 0.82));
+}
+
+.character-card--jelly {
+  background: linear-gradient(135deg, rgba(255, 238, 249, 0.92), rgba(214, 241, 255, 0.82));
+}
+
+.character-card--ice {
+  background: linear-gradient(135deg, rgba(231, 248, 255, 0.94), rgba(214, 238, 255, 0.82));
+}
+
+.character-card__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.character-card__top > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.character-avatar {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 2rem;
+}
+
+.character-details {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.character-details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #6d5844;
+}
+
+.character-details dt {
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.character-details dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+}
+
+.state-pill {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 999px;
+  color: #8a6040;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.state-pill--owned {
+  color: #236b61;
+  background: rgba(189, 243, 231, 0.82);
+}
+
+.card-message {
+  margin: 0;
+  color: #b15d50;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.small-primary-button,
+.small-disabled-button {
+  min-height: 46px;
+  border-radius: 15px;
+  font-weight: 900;
+}
+
+.small-primary-button {
+  color: #3b2f23;
+  background: #ffcf5f;
+  cursor: pointer;
+}
+
+.small-primary-button:disabled {
+  color: #7a6048;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.small-disabled-button {
+  color: #8a7968;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.debug-coin-button {
+  justify-self: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px dashed rgba(122, 96, 72, 0.42);
+  border-radius: 999px;
+  color: #7a6048;
+  background: rgba(255, 255, 255, 0.52);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.sticky-action {
+  position: sticky;
+  bottom: 12px;
+}
+
+.game-screen {
+  justify-content: flex-start;
+}
+
+.current-character {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.current-character > span {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 18px;
+  background: #ffe39d;
+  font-size: 1.8rem;
+}
+
+.current-character strong {
+  display: block;
+  color: #503522;
+  font-size: 1.3rem;
+}
+
+.game-hud {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.game-hud article {
+  display: grid;
+  gap: 4px;
+  min-height: 70px;
+  place-items: center;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 22px rgba(96, 139, 150, 0.12);
+}
+
+.game-hud span {
+  color: #7a6048;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.game-hud strong {
+  color: #503522;
+  font-size: 1.2rem;
+}
+
+.game-hud__character {
+  grid-column: 1 / -1;
+}
+
+.game-canvas-frame {
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  border-radius: 28px;
+  background: #dff6df;
+  box-shadow: inset 0 0 0 8px rgba(91, 171, 130, 0.18);
+}
+
+.game-canvas-frame canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.result-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  padding: 20px;
+  place-items: center;
+  background: rgba(67, 50, 35, 0.36);
+}
+
+.result-modal__panel {
+  display: grid;
+  width: min(100%, 390px);
+  gap: 14px;
+  padding: 22px;
+  border-radius: 26px;
+  background: #fffaf0;
+  box-shadow: 0 22px 60px rgba(59, 47, 35, 0.24);
+}
+
+.result-modal__panel p {
+  margin: 0;
+  color: #7a6048;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: grid;
+  gap: 10px;
+}
+
 @media (min-width: 640px) {
   .app-shell {
     padding: 36px 24px;
@@ -171,5 +509,9 @@ h1 {
 
   .status-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .page-screen {
+    min-height: calc(100vh - 72px);
   }
 }

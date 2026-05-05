@@ -1,3 +1,5 @@
+import type { BestScoreByDifficulty } from '../storage/storage';
+
 const homeCopy = {
   title: '포켓랜드',
   subtitle: '귀여운 친구들과 땅을 넓혀보세요!',
@@ -8,7 +10,31 @@ const homeCopy = {
   bestScoreEmpty: '아직 기록이 없어요',
 };
 
-export function HomePage() {
+type HomePageProps = {
+  coins: number;
+  bestScoreByDifficulty: BestScoreByDifficulty;
+  totalPlayCount: number;
+  onPlay: () => void;
+  onOpenCollection: () => void;
+};
+
+function formatBestScore(bestScoreByDifficulty: BestScoreByDifficulty) {
+  const bestScore = Math.max(
+    bestScoreByDifficulty.easy,
+    bestScoreByDifficulty.normal,
+    bestScoreByDifficulty.hard,
+  );
+
+  return bestScore > 0 ? `${bestScore}%` : homeCopy.bestScoreEmpty;
+}
+
+export function HomePage({
+  coins,
+  bestScoreByDifficulty,
+  totalPlayCount,
+  onPlay,
+  onOpenCollection,
+}: HomePageProps) {
   return (
     <main className="app-shell">
       <section className="home-screen" aria-labelledby="home-title">
@@ -24,19 +50,23 @@ export function HomePage() {
         <div className="status-grid" aria-label="플레이 정보">
           <article className="status-card">
             <span>{homeCopy.coinsLabel}</span>
-            <strong>0</strong>
+            <strong>{coins.toLocaleString('ko-KR')}</strong>
           </article>
           <article className="status-card">
             <span>{homeCopy.bestScoreLabel}</span>
-            <strong>{homeCopy.bestScoreEmpty}</strong>
+            <strong>{formatBestScore(bestScoreByDifficulty)}</strong>
+          </article>
+          <article className="status-card status-card--wide">
+            <span>플레이 횟수</span>
+            <strong>{totalPlayCount.toLocaleString('ko-KR')}회</strong>
           </article>
         </div>
 
         <div className="action-stack">
-          <button className="primary-button" type="button">
+          <button className="primary-button" type="button" onClick={onPlay}>
             {homeCopy.play}
           </button>
-          <button className="secondary-button" type="button">
+          <button className="secondary-button" type="button" onClick={onOpenCollection}>
             {homeCopy.collection}
           </button>
         </div>
