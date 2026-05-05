@@ -1,0 +1,175 @@
+:root {
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #3b2f23;
+  background: #fff6df;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button {
+  border: 0;
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 24px 18px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 207, 106, 0.45), transparent 34%),
+    linear-gradient(180deg, #fff6df 0%, #f1fbff 100%);
+}
+
+.home-screen {
+  display: flex;
+  width: min(100%, 430px);
+  min-height: calc(100vh - 48px);
+  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+}
+
+.home-hero {
+  padding: 26px 22px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 18px 42px rgba(210, 143, 74, 0.18);
+  text-align: center;
+}
+
+.mascot-badge {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  place-items: center;
+  border-radius: 24px;
+  background: #ffe39d;
+  box-shadow: inset 0 -6px 0 rgba(238, 177, 70, 0.3);
+  font-size: 38px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #2f8f7d;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+h1 {
+  margin: 0;
+  color: #503522;
+  font-size: 3rem;
+  line-height: 1.04;
+}
+
+.subtitle {
+  margin: 12px 0 0;
+  color: #7a6048;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 74px;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 28px rgba(96, 139, 150, 0.14);
+}
+
+.status-card span {
+  color: #7a6048;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.status-card strong {
+  color: #3b2f23;
+  font-size: 1.05rem;
+  text-align: right;
+}
+
+.action-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 56px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 900;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.primary-button {
+  color: #3b2f23;
+  background: #ffcf5f;
+  box-shadow: 0 12px 0 #dc9f2e;
+}
+
+.secondary-button {
+  color: #236b61;
+  background: #bdf3e7;
+  box-shadow: 0 12px 0 #7ccbbd;
+}
+
+.primary-button:active,
+.secondary-button:active {
+  transform: translateY(6px);
+  box-shadow: 0 6px 0 rgba(80, 53, 34, 0.25);
+}
+
+@media (min-width: 640px) {
+  .app-shell {
+    padding: 36px 24px;
+  }
+
+  .home-screen {
+    min-height: calc(100vh - 72px);
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
