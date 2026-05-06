@@ -1,5 +1,5 @@
-import { GRID_SIZE, STARTING_LIVES, TARGET_RATIO_BY_DIFFICULTY } from '../constants';
-import type { CellType, Difficulty, GameState } from '../types';
+import { DIFFICULTY_SETTINGS, GRID_SIZE } from '../constants';
+import type { CellType, Difficulty, EnemyState, GameState } from '../types';
 
 function createEmptyGrid(size: number): CellType[][] {
   return Array.from({ length: size }, () => Array.from({ length: size }, () => 'empty'));
@@ -15,44 +15,51 @@ function fillOwnedSquare(grid: CellType[][], centerX: number, centerY: number, r
   }
 }
 
-function addPreviewPath(grid: CellType[][], startX: number, startY: number) {
-  for (let x = startX + 4; x <= startX + 9; x += 1) {
-    if (grid[startY]?.[x] !== undefined) {
-      grid[startY][x] = 'path';
-    }
-  }
+function createEnemiesForDifficulty(difficulty: Difficulty): EnemyState[] {
+  const enemyPresets: EnemyState[] = [
+    {
+      id: 'enemy-1',
+      position: { x: 22, y: 9 },
+      velocity: { x: 1, y: 1 },
+    },
+    {
+      id: 'enemy-2',
+      position: { x: 24, y: 23 },
+      velocity: { x: -1, y: 1 },
+    },
+    {
+      id: 'enemy-3',
+      position: { x: 15, y: 25 },
+      velocity: { x: 1, y: -1 },
+    },
+  ];
+
+  return enemyPresets.slice(0, DIFFICULTY_SETTINGS[difficulty].enemyCount);
 }
 
 export function createInitialGameState(difficulty: Difficulty = 'easy'): GameState {
   const grid = createEmptyGrid(GRID_SIZE);
+  const difficultySettings = DIFFICULTY_SETTINGS[difficulty];
   const startX = 7;
   const startY = Math.floor(GRID_SIZE / 2);
 
   fillOwnedSquare(grid, startX, startY, 3);
-  addPreviewPath(grid, startX, startY);
 
   return {
     difficulty,
-    targetRatio: TARGET_RATIO_BY_DIFFICULTY[difficulty],
+    status: 'playing',
+    targetRatio: difficultySettings.targetRatio,
     gridSize: GRID_SIZE,
     grid,
     player: {
       position: { x: startX, y: startY },
+      startPosition: { x: startX, y: startY },
       direction: 'right',
-      lives: STARTING_LIVES,
+      path: [],
+      lives: difficultySettings.lives,
     },
-    enemies: [
-      {
-        id: 'enemy-1',
-        position: { x: 22, y: 9 },
-        direction: 'down',
-      },
-      {
-        id: 'enemy-2',
-        position: { x: 24, y: 23 },
-        direction: 'left',
-      },
-    ],
+    enemies: createEnemiesForDifficulty(difficulty),
+    enemyMoveProgress: 0,
   };
 }
 

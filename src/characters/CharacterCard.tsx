@@ -21,7 +21,7 @@ export function CharacterCard({
 }: CharacterCardProps) {
   const stateLabel = isSelected ? '선택됨' : isOwned ? '보유 중' : '잠김';
   const unlockText =
-    character.unlockCost === 0 ? '처음부터 함께해요' : `${character.unlockCost} 코인으로 해금`;
+    character.unlockCost === 0 ? '처음부터 함께해요' : `${character.unlockCost}코인으로 해금`;
   const actionLabel = isOwned
     ? isSelected
       ? '선택됨'
@@ -43,10 +43,9 @@ export function CharacterCard({
         <div>
           <p className="eyebrow">{character.role}</p>
           <h2>{character.name}</h2>
+          <p className="character-flavor">{character.flavorText}</p>
         </div>
-        <span className={isOwned ? 'state-pill state-pill--owned' : 'state-pill'}>
-          {stateLabel}
-        </span>
+        <span className={isOwned ? 'state-pill state-pill--owned' : 'state-pill'}>{stateLabel}</span>
       </div>
 
       <dl className="character-details">
@@ -65,7 +64,7 @@ export function CharacterCard({
       </dl>
 
       {!isOwned && !canUnlock ? (
-        <p className="card-message">코인이 부족해요. 조금만 더 모아볼까요?</p>
+        <p className="card-message">코인이 부족해요. 한 판 더 해서 모아볼까요?</p>
       ) : null}
 
       <button

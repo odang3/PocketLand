@@ -11,7 +11,7 @@ export function GameHud({ ownedRatio, targetRatio, lives, character }: GameHudPr
   return (
     <div className="game-hud" aria-label="게임 상태">
       <article>
-        <span>점령률</span>
+        <span>점유율</span>
         <strong>{ownedRatio}%</strong>
       </article>
       <article>

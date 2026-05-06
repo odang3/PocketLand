@@ -55,7 +55,7 @@ export function CharacterSelectPage({
         <p className="page-description">
           {isPlayMode
             ? '함께 땅을 넓힐 친구를 고르고 한 판을 시작해요.'
-            : '모은 친구와 앞으로 해금할 친구를 확인해요.'}
+            : '모은 친구와 아직 해금할 친구를 확인해요.'}
         </p>
 
         <div className="character-list">
