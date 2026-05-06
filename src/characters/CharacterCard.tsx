@@ -1,7 +1,13 @@
 import type { Character, CharacterId } from './characterData';
+import {
+  getCharacterPresentation,
+  getShardProgress,
+  getUnlockProgress,
+} from './characterPresentation';
 
 type CharacterCardProps = {
   character: Character;
+  coins: number;
   isOwned: boolean;
   isSelected: boolean;
   canUnlock: boolean;
@@ -12,6 +18,7 @@ type CharacterCardProps = {
 
 export function CharacterCard({
   character,
+  coins,
   isOwned,
   isSelected,
   canUnlock,
@@ -19,53 +26,57 @@ export function CharacterCard({
   onSelectCharacter,
   onUnlockCharacter,
 }: CharacterCardProps) {
-  const stateLabel = isSelected ? '선택됨' : isOwned ? '보유 중' : '잠김';
-  const unlockText =
-    character.unlockCost === 0 ? '처음부터 함께해요' : `${character.unlockCost}코인으로 해금`;
+  const presentation = getCharacterPresentation(character);
+  const unlockProgress = getUnlockProgress(character, coins, isOwned);
+  const shardProgress = getShardProgress(character, coins, isOwned);
+  const stateLabel = isSelected ? '선택됨' : isOwned ? '보유' : '잠김';
   const actionLabel = isOwned
     ? isSelected
       ? '선택됨'
       : '선택하기'
     : canUnlock
       ? '해금하기'
-      : '코인이 부족해요';
+      : '코인 부족';
 
   return (
     <article
-      className={`character-card ${character.themeClass} ${isSelected ? 'is-selected' : ''} ${
-        !isOwned ? 'is-locked' : ''
-      }`}
+      className={`character-card collection-card collection-card--${presentation.grade} ${character.themeClass} ${
+        isSelected ? 'is-selected' : ''
+      } ${!isOwned ? 'is-locked' : ''}`}
     >
-      <div className="character-card__top">
-        <div className="character-avatar" aria-hidden="true">
-          {character.emoji}
-        </div>
-        <div>
-          <p className="eyebrow">{character.role}</p>
-          <h2>{character.name}</h2>
-          <p className="character-flavor">{character.flavorText}</p>
-        </div>
-        <span className={isOwned ? 'state-pill state-pill--owned' : 'state-pill'}>{stateLabel}</span>
+      <div className="collection-card__top">
+        <span className={`grade-badge grade-badge--${presentation.grade}`}>{presentation.gradeLabel}</span>
+        <span className={isOwned ? 'state-pill state-pill--owned' : 'state-pill state-pill--locked'}>
+          {stateLabel}
+        </span>
       </div>
 
-      <dl className="character-details">
-        <div>
-          <dt>능력</dt>
-          <dd>{character.ability}</dd>
-        </div>
-        <div>
-          <dt>땅 효과</dt>
-          <dd>{character.territoryEffect}</dd>
-        </div>
-        <div>
-          <dt>해금</dt>
-          <dd>{unlockText}</dd>
-        </div>
-      </dl>
+      <div className="collection-card__avatar" aria-hidden="true">
+        <span>{presentation.emoji}</span>
+        {!isOwned ? <strong>🔒</strong> : null}
+      </div>
 
-      {!isOwned && !canUnlock ? (
-        <p className="card-message">코인이 부족해요. 한 판 더 해서 모아볼까요?</p>
-      ) : null}
+      <div className="collection-card__body">
+        <p>{presentation.role}</p>
+        <h2>{presentation.displayName}</h2>
+        <dl>
+          <div>
+            <dt>능력</dt>
+            <dd>{presentation.ability}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div className="unlock-progress" aria-label={`${presentation.displayName} 해금 진행률 ${unlockProgress}%`}>
+        <div>
+          <span style={{ width: `${unlockProgress}%` }} />
+        </div>
+        <p>
+          {isOwned
+            ? '해금 완료'
+            : `${shardProgress}/${getCharacterPresentation(character).shardGoal} 조각 · ${character.unlockCost} 코인`}
+        </p>
+      </div>
 
       <button
         className={isOwned || canUnlock ? 'small-primary-button' : 'small-disabled-button'}
