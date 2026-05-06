@@ -17,11 +17,20 @@ type UseGameSessionArgs = {
   onFinishGame: (resultInput: GameSessionResultInput) => GameRewardResult;
 };
 
+export type CaptureFeedback = {
+  id: number;
+  gainedCoins: number;
+  gainedRatio: number;
+};
+
 export function useGameSession({ character, difficulty, onFinishGame }: UseGameSessionArgs) {
   const [isResultOpen, setIsResultOpen] = useState(false);
   const [gameState, setGameState] = useState(() => createInitialGameState(difficulty));
   const [rewardResult, setRewardResult] = useState<GameRewardResult | null>(null);
+  const [captureFeedback, setCaptureFeedback] = useState<CaptureFeedback | null>(null);
   const hasReportedResultRef = useRef(false);
+  const previousOwnedRatioRef = useRef(getOwnedRatio(gameState.grid));
+  const feedbackIdRef = useRef(0);
   const ownedRatio = useMemo(() => getOwnedRatio(gameState.grid), [gameState.grid]);
   const playerSpeedMultiplier =
     character.id === 'malangjelly' ? MALANGJELLY_PLAYER_SPEED_MULTIPLIER : 1;
@@ -37,6 +46,45 @@ export function useGameSession({ character, difficulty, onFinishGame }: UseGameS
       }).earnedCoins,
     [character.id, gameState.difficulty, ownedRatio],
   );
+
+  useEffect(() => {
+    const previousOwnedRatio = previousOwnedRatioRef.current;
+    if (ownedRatio <= previousOwnedRatio) {
+      previousOwnedRatioRef.current = ownedRatio;
+      return;
+    }
+
+    const gainedRatio = ownedRatio - previousOwnedRatio;
+    const gainedCoins = calculateGameReward({
+      status: 'gameOver',
+      difficulty: gameState.difficulty,
+      finalOwnedRatio: gainedRatio,
+      selectedCharacterId: character.id,
+      previousBestScore: 0,
+    }).earnedCoins;
+
+    feedbackIdRef.current += 1;
+    setCaptureFeedback({
+      id: feedbackIdRef.current,
+      gainedCoins,
+      gainedRatio,
+    });
+    previousOwnedRatioRef.current = ownedRatio;
+  }, [character.id, gameState.difficulty, ownedRatio]);
+
+  useEffect(() => {
+    if (!captureFeedback) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setCaptureFeedback(null);
+    }, 1200);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [captureFeedback]);
 
   useEffect(() => {
     const tickId = window.setInterval(() => {
@@ -86,12 +134,15 @@ export function useGameSession({ character, difficulty, onFinishGame }: UseGameS
 
   const playAgain = useCallback(() => {
     hasReportedResultRef.current = false;
+    previousOwnedRatioRef.current = getOwnedRatio(createInitialGameState(difficulty).grid);
+    setCaptureFeedback(null);
     setRewardResult(null);
     setIsResultOpen(false);
     setGameState(createInitialGameState(difficulty));
   }, [difficulty]);
 
   return {
+    captureFeedback,
     coinPreview,
     gameState,
     isResultOpen,

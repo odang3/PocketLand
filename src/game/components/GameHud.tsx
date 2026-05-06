@@ -1,38 +1,47 @@
-import type { Character } from '../../characters/characterData';
-
 type GameHudProps = {
   ownedRatio: number;
   targetRatio: number;
   lives: number;
   coinPreview: number;
-  character: Character;
 };
 
-export function GameHud({ ownedRatio, targetRatio, lives, coinPreview, character }: GameHudProps) {
+export function GameHud({ ownedRatio, targetRatio, lives, coinPreview }: GameHudProps) {
   return (
-    <div className="game-hud" aria-label="게임 상태">
-      <article>
-        <span>점유율</span>
-        <strong>{ownedRatio}%</strong>
+    <div className="game-hud game-hud--premium" aria-label="게임 상태">
+      <article className="game-hud-pill game-hud-pill--progress">
+        <span className="hud-icon" aria-hidden="true">
+          🏝️
+        </span>
+        <div>
+          <span>점령률</span>
+          <strong>{ownedRatio}%</strong>
+          <small>목표 {targetRatio}%</small>
+        </div>
       </article>
-      <article>
-        <span>목표</span>
-        <strong>{targetRatio}%</strong>
+
+      <article className="game-hud-pill">
+        <span className="hud-icon" aria-hidden="true">
+          🪙
+        </span>
+        <div>
+          <span>코인</span>
+          <strong>{coinPreview}</strong>
+        </div>
       </article>
-      <article>
-        <span>목숨</span>
-        <strong>{lives}</strong>
+
+      <article className="game-hud-pill">
+        <span className="hud-icon" aria-hidden="true">
+          💗
+        </span>
+        <div>
+          <span>생명</span>
+          <strong>{lives}</strong>
+        </div>
       </article>
-      <article>
-        <span>예상 코인</span>
-        <strong>{coinPreview}</strong>
-      </article>
-      <article className="game-hud__character">
-        <span>친구</span>
-        <strong>
-          {character.emoji} {character.name}
-        </strong>
-      </article>
+
+      <button className="pause-button" type="button" aria-label="일시정지">
+        II
+      </button>
     </div>
   );
 }

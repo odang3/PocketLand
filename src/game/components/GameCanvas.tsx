@@ -10,33 +10,45 @@ type GameCanvasProps = {
 
 type ThemeColors = {
   empty: string;
+  emptyAccent: string;
   owned: string;
   ownedAccent: string;
+  ownedHighlight: string;
   path: string;
   pathAccent: string;
+  pathGlow: string;
 };
 
 const themeColorsByCharacter: Record<Character['id'], ThemeColors> = {
   ttangnyangi: {
-    empty: '#eaf8d8',
-    owned: '#ffe199',
+    empty: '#dff4c8',
+    emptyAccent: '#c9e7b6',
+    owned: '#ffe29c',
     ownedAccent: '#d98f49',
-    path: '#ffad77',
+    ownedHighlight: '#fff4c9',
+    path: '#ff9f5f',
     pathAccent: '#fff2c7',
+    pathGlow: '#ffd15f',
   },
   malangjelly: {
-    empty: '#e8f8e6',
+    empty: '#e1f5dc',
+    emptyAccent: '#c7eac6',
     owned: '#ffc8ec',
     ownedAccent: '#c978cf',
+    ownedHighlight: '#fff1fb',
     path: '#9fd8ff',
     pathAccent: '#fff0fb',
+    pathGlow: '#ffb8ef',
   },
   penguinkong: {
-    empty: '#e8f8f2',
+    empty: '#e3f5ed',
+    emptyAccent: '#c7eadf',
     owned: '#c6f1ff',
     ownedAccent: '#69b6df',
+    ownedHighlight: '#f5fdff',
     path: '#94e7ee',
     pathAccent: '#f4fdff',
+    pathGlow: '#7fdcff',
   },
 };
 
@@ -128,6 +140,18 @@ function drawOwnedThemeMark(
   drawIceMark(context, x, y, cellSize, color);
 }
 
+function drawSparkle(context: CanvasRenderingContext2D, centerX: number, centerY: number, size: number, color: string) {
+  context.strokeStyle = color;
+  context.lineWidth = Math.max(1, size * 0.12);
+  context.lineCap = 'round';
+  context.beginPath();
+  context.moveTo(centerX - size, centerY);
+  context.lineTo(centerX + size, centerY);
+  context.moveTo(centerX, centerY - size);
+  context.lineTo(centerX, centerY + size);
+  context.stroke();
+}
+
 function drawCell(
   context: CanvasRenderingContext2D,
   cell: CellType,
@@ -141,24 +165,38 @@ function drawCell(
   const size = cellSize - inset * 2;
 
   if (cell === 'empty') {
-    context.fillStyle = colors.empty;
+    context.fillStyle = (x / cellSize + y / cellSize) % 2 === 0 ? colors.empty : colors.emptyAccent;
     context.fillRect(x, y, cellSize, cellSize);
+    context.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    context.beginPath();
+    context.arc(x + cellSize * 0.72, y + cellSize * 0.28, cellSize * 0.1, 0, Math.PI * 2);
+    context.fill();
     return;
   }
 
-  context.fillStyle = cell === 'owned' ? colors.owned : colors.path;
+  if (cell === 'path') {
+    context.shadowColor = colors.pathGlow;
+    context.shadowBlur = cellSize * 0.42;
+  }
+
+  const gradient = context.createLinearGradient(x, y, x, y + cellSize);
+  gradient.addColorStop(0, cell === 'owned' ? colors.ownedHighlight : colors.pathAccent);
+  gradient.addColorStop(1, cell === 'owned' ? colors.owned : colors.path);
+  context.fillStyle = gradient;
   drawRoundedCell(context, x + inset, y + inset, size, Math.max(2, cellSize * 0.2));
+  context.shadowBlur = 0;
 
   if (cell === 'owned') {
     drawOwnedThemeMark(context, characterId, x, y, cellSize, colors.ownedAccent);
+    context.fillStyle = 'rgba(255, 255, 255, 0.34)';
+    context.beginPath();
+    context.arc(x + cellSize * 0.32, y + cellSize * 0.3, cellSize * 0.08, 0, Math.PI * 2);
+    context.fill();
     return;
   }
 
-  context.fillStyle = colors.pathAccent;
-  context.globalAlpha = 0.5;
-  context.beginPath();
-  context.arc(x + cellSize * 0.5, y + cellSize * 0.5, cellSize * 0.1, 0, Math.PI * 2);
-  context.fill();
+  context.globalAlpha = 0.78;
+  drawSparkle(context, x + cellSize * 0.5, y + cellSize * 0.5, cellSize * 0.13, colors.pathAccent);
   context.globalAlpha = 1;
 }
 
@@ -172,13 +210,27 @@ function drawPlayer(
   const centerY = (gameState.player.position.y + 0.5) * cellSize;
   const direction = directionVector[gameState.player.direction];
 
-  context.fillStyle = '#ffffff';
-  context.shadowColor = 'rgba(80, 53, 34, 0.18)';
-  context.shadowBlur = cellSize * 0.35;
+  const auraGradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, cellSize * 1.25);
+  auraGradient.addColorStop(0, 'rgba(255, 247, 177, 0.7)');
+  auraGradient.addColorStop(1, 'rgba(255, 247, 177, 0)');
+  context.fillStyle = auraGradient;
   context.beginPath();
-  context.arc(centerX, centerY, cellSize * 0.68, 0, Math.PI * 2);
+  context.arc(centerX, centerY, cellSize * 1.25, 0, Math.PI * 2);
+  context.fill();
+
+  context.fillStyle = '#ffffff';
+  context.shadowColor = 'rgba(80, 53, 34, 0.28)';
+  context.shadowBlur = cellSize * 0.45;
+  context.beginPath();
+  context.arc(centerX, centerY, cellSize * 0.76, 0, Math.PI * 2);
   context.fill();
   context.shadowBlur = 0;
+
+  context.strokeStyle = '#ffcf5f';
+  context.lineWidth = Math.max(2, cellSize * 0.13);
+  context.beginPath();
+  context.arc(centerX, centerY, cellSize * 0.76, 0, Math.PI * 2);
+  context.stroke();
 
   const arrowTipX = centerX + direction.x * cellSize * 0.98;
   const arrowTipY = centerY + direction.y * cellSize * 0.98;
@@ -188,7 +240,7 @@ function drawPlayer(
   const perpendicularY = direction.x;
   const arrowHalfWidth = cellSize * 0.22;
 
-  context.fillStyle = '#5c432f';
+  context.fillStyle = '#4f321c';
   context.strokeStyle = '#ffffff';
   context.lineWidth = Math.max(2, cellSize * 0.12);
   context.lineJoin = 'round';
@@ -211,13 +263,39 @@ function drawEnemies(context: CanvasRenderingContext2D, gameState: GameState, ce
     const centerX = (enemy.position.x + 0.5) * cellSize;
     const centerY = (enemy.position.y + 0.5) * cellSize;
 
-    context.fillStyle = '#ff8f9c';
-    context.shadowColor = 'rgba(177, 93, 80, 0.22)';
-    context.shadowBlur = cellSize * 0.22;
+    const enemyGradient = context.createRadialGradient(
+      centerX - cellSize * 0.12,
+      centerY - cellSize * 0.16,
+      cellSize * 0.08,
+      centerX,
+      centerY,
+      cellSize * 0.58,
+    );
+    enemyGradient.addColorStop(0, '#ffccd4');
+    enemyGradient.addColorStop(1, '#ff667a');
+
+    context.fillStyle = 'rgba(255, 73, 102, 0.18)';
     context.beginPath();
-    context.arc(centerX, centerY, cellSize * 0.48, 0, Math.PI * 2);
+    context.arc(centerX, centerY, cellSize * 0.86, 0, Math.PI * 2);
+    context.fill();
+
+    context.fillStyle = enemyGradient;
+    context.shadowColor = 'rgba(177, 55, 80, 0.34)';
+    context.shadowBlur = cellSize * 0.36;
+    context.beginPath();
+    context.arc(centerX, centerY, cellSize * 0.54, 0, Math.PI * 2);
     context.fill();
     context.shadowBlur = 0;
+
+    context.fillStyle = '#ff667a';
+    context.beginPath();
+    context.moveTo(centerX - cellSize * 0.3, centerY - cellSize * 0.34);
+    context.lineTo(centerX - cellSize * 0.48, centerY - cellSize * 0.66);
+    context.lineTo(centerX - cellSize * 0.12, centerY - cellSize * 0.44);
+    context.moveTo(centerX + cellSize * 0.3, centerY - cellSize * 0.34);
+    context.lineTo(centerX + cellSize * 0.48, centerY - cellSize * 0.66);
+    context.lineTo(centerX + cellSize * 0.12, centerY - cellSize * 0.44);
+    context.fill();
 
     context.fillStyle = '#ffffff';
     context.beginPath();
@@ -225,7 +303,8 @@ function drawEnemies(context: CanvasRenderingContext2D, gameState: GameState, ce
     context.arc(centerX + cellSize * 0.14, centerY - cellSize * 0.08, cellSize * 0.07, 0, Math.PI * 2);
     context.fill();
 
-    context.fillStyle = '#7a4050';
+    context.strokeStyle = '#7a4050';
+    context.lineWidth = Math.max(1, cellSize * 0.08);
     context.beginPath();
     context.arc(centerX, centerY + cellSize * 0.12, cellSize * 0.12, 0, Math.PI);
     context.stroke();
@@ -253,7 +332,11 @@ function renderGameCanvas(
   context.clearRect(0, 0, displaySize, displaySize);
   context.shadowBlur = 0;
   context.globalAlpha = 1;
-  context.fillStyle = '#dff4d2';
+  const boardGradient = context.createLinearGradient(0, 0, displaySize, displaySize);
+  boardGradient.addColorStop(0, '#e7f8c7');
+  boardGradient.addColorStop(0.55, '#d7f0bd');
+  boardGradient.addColorStop(1, '#c7e6ab');
+  context.fillStyle = boardGradient;
   context.fillRect(0, 0, displaySize, displaySize);
 
   const cellSize = displaySize / gameState.gridSize;
@@ -265,7 +348,7 @@ function renderGameCanvas(
     });
   });
 
-  context.strokeStyle = 'rgba(83, 139, 92, 0.16)';
+  context.strokeStyle = 'rgba(83, 139, 92, 0.08)';
   context.lineWidth = 1;
   for (let index = 0; index <= gameState.gridSize; index += 1) {
     const position = index * cellSize;
