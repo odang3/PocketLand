@@ -48,13 +48,6 @@ export function usePlayerSave() {
     });
   };
 
-  const grantDebugCoins = () => {
-    setSaveData((currentSave) => ({
-      ...currentSave,
-      coins: currentSave.coins + 100,
-    }));
-  };
-
   const finishGameSession = (resultInput: GameSessionResultInput): GameRewardResult => {
     const rewardResult = calculateGameReward({
       ...resultInput,
@@ -82,7 +75,6 @@ export function usePlayerSave() {
     selectedCharacter,
     selectCharacter,
     unlockCharacter,
-    grantDebugCoins,
     finishGameSession,
   };
 }

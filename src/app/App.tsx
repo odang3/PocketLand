@@ -12,7 +12,6 @@ export function App() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('easy');
   const {
     finishGameSession,
-    grantDebugCoins,
     saveData,
     selectCharacter,
     selectedCharacter,
@@ -27,7 +26,6 @@ export function App() {
         ownedCharacterIds={saveData.ownedCharacterIds}
         selectedCharacterId={saveData.selectedCharacterId}
         onBack={() => setScreen(routes.home)}
-        onGrantDebugCoins={import.meta.env.DEV ? grantDebugCoins : undefined}
         onSelectCharacter={selectCharacter}
         onStartGame={() => setScreen(routes.difficultySelect)}
         onUnlockCharacter={unlockCharacter}
@@ -54,7 +52,6 @@ export function App() {
         ownedCharacterIds={saveData.ownedCharacterIds}
         selectedCharacterId={saveData.selectedCharacterId}
         onBack={() => setScreen(routes.home)}
-        onGrantDebugCoins={import.meta.env.DEV ? grantDebugCoins : undefined}
         onSelectCharacter={selectCharacter}
         onUnlockCharacter={unlockCharacter}
       />
@@ -76,7 +73,6 @@ export function App() {
     <HomePage
       coins={saveData.coins}
       bestScoreByDifficulty={saveData.bestScoreByDifficulty}
-      totalPlayCount={saveData.totalPlayCount}
       onPlay={() => setScreen(routes.characterSelect)}
       onOpenCollection={() => setScreen(routes.collection)}
     />

@@ -2,7 +2,6 @@ import { CharacterCard } from './CharacterCard';
 import { characterData, type Character, type CharacterId } from './characterData';
 import {
   getCharacterPresentation,
-  getShardProgress,
   getUnlockProgress,
 } from './characterPresentation';
 
@@ -12,7 +11,6 @@ type CharacterSelectPageProps = {
   ownedCharacterIds: CharacterId[];
   selectedCharacterId: CharacterId;
   onBack: () => void;
-  onGrantDebugCoins?: () => void;
   onSelectCharacter: (characterId: CharacterId) => void;
   onUnlockCharacter: (characterId: CharacterId) => void;
   onStartGame?: () => void;
@@ -32,7 +30,6 @@ export function CharacterSelectPage({
   ownedCharacterIds,
   selectedCharacterId,
   onBack,
-  onGrantDebugCoins,
   onSelectCharacter,
   onUnlockCharacter,
   onStartGame,
@@ -43,7 +40,7 @@ export function CharacterSelectPage({
   const featuredPresentation = getCharacterPresentation(featuredCharacter);
   const isFeaturedOwned = ownedCharacterIds.includes(featuredCharacter.id);
   const featuredProgress = getUnlockProgress(featuredCharacter, coins, isFeaturedOwned);
-  const featuredShardProgress = getShardProgress(featuredCharacter, coins, isFeaturedOwned);
+  const featuredCoinProgress = Math.min(coins, featuredCharacter.unlockCost);
 
   return (
     <main className="app-shell app-shell--collection">
@@ -91,19 +88,21 @@ export function CharacterSelectPage({
               <span style={{ width: `${featuredProgress}%` }} />
             </div>
             <p>
-              조각 진행률 {featuredShardProgress}/{featuredPresentation.shardGoal}
+              {isFeaturedOwned ? '선택 가능한 친구예요' : `${featuredCoinProgress}/${featuredCharacter.unlockCost} 코인`}
             </p>
           </div>
         </section>
 
         <div className="collection-status-panel" aria-label="수집 현황">
           <div>
-            <span>수집 현황</span>
+            <span>수집</span>
             <strong>
               {ownedCount}/{characterData.length}
             </strong>
           </div>
-          <p>모두 모으면 보너스 코인 보상이 열려요</p>
+          <div className="collection-progress-bar" aria-hidden="true">
+            <span style={{ width: `${(ownedCount / characterData.length) * 100}%` }} />
+          </div>
         </div>
 
         <div className="character-list collection-grid">
@@ -125,12 +124,6 @@ export function CharacterSelectPage({
             );
           })}
         </div>
-
-        {onGrantDebugCoins ? (
-          <button className="debug-coin-button" type="button" onClick={onGrantDebugCoins}>
-            개발용 +100 코인
-          </button>
-        ) : null}
 
         {isPlayMode ? (
           <button className="primary-button sticky-action collection-start-button" type="button" onClick={onStartGame}>

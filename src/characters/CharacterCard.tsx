@@ -1,7 +1,6 @@
 import type { Character, CharacterId } from './characterData';
 import {
   getCharacterPresentation,
-  getShardProgress,
   getUnlockProgress,
 } from './characterPresentation';
 
@@ -28,11 +27,12 @@ export function CharacterCard({
 }: CharacterCardProps) {
   const presentation = getCharacterPresentation(character);
   const unlockProgress = getUnlockProgress(character, coins, isOwned);
-  const shardProgress = getShardProgress(character, coins, isOwned);
-  const stateLabel = isSelected ? '선택됨' : isOwned ? '보유' : '잠김';
+  const stateLabel = isSelected ? '선택중' : isOwned ? '보유' : '잠금';
+  const coinProgress = Math.min(coins, character.unlockCost);
+  const neededCoins = Math.max(0, character.unlockCost - coins);
   const actionLabel = isOwned
     ? isSelected
-      ? '선택됨'
+      ? '선택중'
       : '선택하기'
     : canUnlock
       ? '해금하기'
@@ -65,6 +65,7 @@ export function CharacterCard({
             <dd>{presentation.ability}</dd>
           </div>
         </dl>
+        <p className="collection-card__flavor">{presentation.flavorText}</p>
       </div>
 
       <div className="unlock-progress" aria-label={`${presentation.displayName} 해금 진행률 ${unlockProgress}%`}>
@@ -74,9 +75,11 @@ export function CharacterCard({
         <p>
           {isOwned
             ? '해금 완료'
-            : `${shardProgress}/${getCharacterPresentation(character).shardGoal} 조각 · ${character.unlockCost} 코인`}
+            : `${coinProgress}/${character.unlockCost} 코인`}
         </p>
       </div>
+
+      {!isOwned && !canUnlock ? <p className="card-message">{neededCoins}코인 더 필요</p> : null}
 
       <button
         className={isOwned || canUnlock ? 'small-primary-button' : 'small-disabled-button'}
@@ -91,7 +94,7 @@ export function CharacterCard({
           onUnlockCharacter(character.id);
         }}
       >
-        {mode === 'collection' && !isOwned && canUnlock ? '도감에 추가하기' : actionLabel}
+        {mode === 'collection' && !isOwned && canUnlock ? '해금하기' : actionLabel}
       </button>
     </article>
   );

@@ -375,14 +375,5 @@ The MVP is considered complete when:
 6. The app builds successfully.
 7. The UI is usable on a mobile viewport.
 
-## UI Redesign Handoff Rule
-
-When working on PocketLand UI redesign:
-1. The designer agent must produce `docs/design/POCKETLAND_UI_REDESIGN_SPEC.md`.
-2. The implementer agent must read `docs/design/POCKETLAND_UI_REDESIGN_SPEC.md` before modifying UI code.
-3. The implementer must not start implementation if the design spec is missing.
-4. After implementation, the implementer must write `docs/design/UI_IMPLEMENTATION_REPORT.md`.
-5. UI work is not complete until `npm run build` succeeds.
-
 ## !!
 - 모든 답변은 반드시 한국어로 해.

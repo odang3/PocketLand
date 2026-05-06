@@ -12,8 +12,9 @@ export function GameResultModal({ rewardResult, onPlayAgain, onBackHome }: GameR
   return (
     <div className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
       <div className="result-modal__panel">
+        <div className="result-modal__medal" aria-hidden="true">{isClear ? '🏅' : '💫'}</div>
         <p className="eyebrow">게임 결과</p>
-        <h2 id="result-title">{isClear ? '클리어!' : '아쉽지만 다시 도전'}</h2>
+        <h2 id="result-title">{isClear ? '클리어!' : '아쉽지만 다시 도전!'}</h2>
 
         <dl className="result-stats">
           <div>
@@ -35,10 +36,10 @@ export function GameResultModal({ rewardResult, onPlayAgain, onBackHome }: GameR
         ) : null}
 
         <div className="modal-actions">
-          <button className="secondary-button" type="button" onClick={onPlayAgain}>
-            한 판 더
+          <button className="primary-button" type="button" onClick={onPlayAgain}>
+            {isClear ? '한 판 더' : '다시 도전'}
           </button>
-          <button className="primary-button" type="button" onClick={onBackHome}>
+          <button className="secondary-button" type="button" onClick={onBackHome}>
             홈으로
           </button>
         </div>

@@ -28,7 +28,7 @@ export function GameScreen({ character, difficulty, onFinishGame, onBackHome }: 
       <section className="page-screen game-screen game-play-screen">
         <header className="game-header game-header--premium">
           <button className="back-button game-home-button" type="button" onClick={onBackHome} aria-label="홈으로 돌아가기">
-            ←
+            ⌂
           </button>
           <div className="current-character current-character--premium">
             <span aria-hidden="true">{character.emoji}</span>
@@ -66,13 +66,8 @@ export function GameScreen({ character, difficulty, onFinishGame, onBackHome }: 
         <div className="game-bottom-controls">
           <p className="game-control-hint">
             <span aria-hidden="true">👆</span>
-            화면을 탭하면 방향이 바뀌어요
+            화면을 탭하면 방향 전환
           </p>
-
-          <button className="skill-button" type="button" aria-label="스킬 준비중" disabled>
-            <span className="skill-button__badge">3</span>
-            <span aria-hidden="true">⚡</span>
-          </button>
         </div>
       </section>
 

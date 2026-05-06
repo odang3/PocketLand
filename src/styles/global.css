@@ -1,12 +1,37 @@
 :root {
+  --sky-top: #8fdaff;
+  --sky-bottom: #e7faff;
+  --warm-ground: #fff1c8;
+  --surface-cream: #fff9e8;
+  --surface-white: #ffffff;
+  --primary-yellow-top: #ffe978;
+  --primary-yellow-mid: #ffc84d;
+  --primary-yellow-bottom: #f2a63a;
+  --primary-text: #4a2f1c;
+  --primary-shadow: #c9782e;
+  --mint-top: #e9fff9;
+  --mint-bottom: #a9f0dd;
+  --mint-shadow: #6ec6b6;
+  --mint-text: #1f6f63;
+  --owned-green: #68d36f;
+  --path-yellow: #ffd75e;
+  --danger-red: #ff5f7d;
+  --coin-gold: #ffcc4d;
+  --life-pink: #ff7fa2;
+  --ice-blue: #8ed8ff;
+  --text-main: #3b2f23;
+  --text-sub: #7a6048;
+  --text-muted: #9a8066;
+  --text-success: #23856f;
+  --text-warning: #b15d50;
   font-family:
     Pretendard,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #3b2f23;
-  background: #fff6df;
+  color: var(--text-main);
+  background: var(--surface-cream);
   letter-spacing: 0;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -2327,5 +2352,213 @@ h2 {
       0 0 0 10px rgba(255, 205, 79, 0.12),
       inset 0 -8px 0 rgba(157, 82, 41, 0.22),
       0 14px 26px rgba(177, 93, 80, 0.3);
+  }
+}
+
+/* UI redesign implementation overrides */
+.home-screen.home-lobby {
+  max-height: none;
+}
+
+.lobby-topbar {
+  justify-content: flex-start;
+}
+
+.logo-lockup > p:not(.lobby-eyebrow) {
+  max-width: 260px;
+  margin: 2px 0 0;
+  color: #4f6f56;
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1.35;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.lobby-best-pill {
+  justify-self: center;
+  margin: 0;
+  padding: 7px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.88);
+  border-radius: 999px;
+  color: var(--text-sub);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: inset 0 -3px 0 rgba(80, 53, 34, 0.07);
+  font-size: 0.82rem;
+  font-weight: 1000;
+}
+
+.lobby-cta-panel > .lobby-sub-button {
+  width: 100%;
+}
+
+.collection-status-panel {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+}
+
+.collection-status-panel p {
+  display: none;
+}
+
+.collection-progress-bar,
+.hud-progress-bar,
+.unlock-progress div {
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(80, 53, 34, 0.1);
+  box-shadow: inset 0 2px 0 rgba(80, 53, 34, 0.08);
+}
+
+.collection-progress-bar {
+  height: 10px;
+}
+
+.collection-progress-bar span,
+.hud-progress-bar span,
+.unlock-progress div span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--path-yellow), var(--owned-green));
+}
+
+.collection-card {
+  min-height: 238px;
+  align-content: space-between;
+}
+
+.collection-card__flavor {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 2px !important;
+  color: var(--text-sub) !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.collection-card .card-message {
+  margin: -4px 0 0;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.game-hud--launch {
+  grid-template-columns: minmax(0, 1fr) minmax(86px, 0.54fr) minmax(82px, 0.5fr) 44px;
+  gap: 7px;
+  align-items: stretch;
+}
+
+.game-hud--launch .game-hud-pill {
+  min-height: 54px;
+}
+
+.game-hud--launch .game-hud-pill--progress {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: center;
+  gap: 7px;
+}
+
+.game-hud--launch .game-hud-pill--progress > div:first-child {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.game-hud--launch .game-hud-pill--progress span {
+  color: var(--text-main);
+  font-size: 0.98rem;
+  font-weight: 1000;
+}
+
+.game-hud--launch .game-hud-pill--progress strong {
+  color: var(--text-sub);
+  font-size: 0.68rem;
+}
+
+.hud-progress-bar {
+  width: 100%;
+  height: 9px;
+}
+
+.hud-progress-bar span {
+  background: linear-gradient(90deg, var(--path-yellow), #ffbd55);
+}
+
+.hud-progress-bar span.is-near-clear {
+  background: linear-gradient(90deg, var(--path-yellow), var(--owned-green));
+}
+
+.game-hud-pill--lives strong {
+  display: flex;
+  gap: 2px;
+  font-size: 1rem;
+}
+
+.life-dot {
+  color: rgba(154, 128, 102, 0.32);
+}
+
+.life-dot.is-alive {
+  color: var(--life-pink);
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.game-hud-pill--lives.is-danger .life-dot.is-alive {
+  color: var(--danger-red);
+}
+
+.game-bottom-controls {
+  grid-template-columns: 1fr;
+}
+
+.game-control-hint {
+  min-height: 46px;
+}
+
+.result-modal {
+  background: rgba(59, 47, 35, 0.42);
+}
+
+.result-modal__panel {
+  justify-items: center;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  border-radius: 28px;
+  text-align: center;
+}
+
+.result-modal__medal {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fff4bd, #ffc84d);
+  box-shadow:
+    inset 0 -6px 0 rgba(150, 92, 28, 0.12),
+    0 10px 18px rgba(196, 116, 40, 0.18);
+  font-size: 2.2rem;
+}
+
+@media (max-width: 370px) {
+  .game-hud--launch {
+    grid-template-columns: minmax(0, 1fr) minmax(74px, 0.46fr) 44px;
+  }
+
+  .game-hud--launch .game-hud-pill--lives {
+    grid-column: 2 / 3;
+  }
+
+  .game-hud--launch .pause-button {
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+  }
+
+  .game-hud--launch .game-hud-pill:not(.game-hud-pill--progress):not(.game-hud-pill--lives) {
+    grid-column: 1 / 2;
   }
 }
