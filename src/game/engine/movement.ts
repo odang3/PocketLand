@@ -20,6 +20,29 @@ function isInsideBoard(position: GridPosition, gridSize: number): boolean {
   return position.x >= 0 && position.x < gridSize && position.y >= 0 && position.y < gridSize;
 }
 
+function getNextPosition(position: GridPosition, direction: Direction): GridPosition {
+  const offset = directionOffset[direction];
+
+  return {
+    x: position.x + offset.x,
+    y: position.y + offset.y,
+  };
+}
+
+function getNextInsideDirection(position: GridPosition, direction: Direction, gridSize: number): Direction {
+  let nextDirection = clockwiseDirection[direction];
+
+  for (let turnCount = 0; turnCount < 4; turnCount += 1) {
+    if (isInsideBoard(getNextPosition(position, nextDirection), gridSize)) {
+      return nextDirection;
+    }
+
+    nextDirection = clockwiseDirection[nextDirection];
+  }
+
+  return direction;
+}
+
 function clearCurrentPath(gameState: GameState): GameState['grid'] {
   return gameState.grid.map((row) => row.map((cell) => (cell === 'path' ? 'empty' : cell)));
 }
@@ -62,18 +85,20 @@ export function movePlayerOneTick(gameState: GameState): GameState {
     return gameState;
   }
 
-  const offset = directionOffset[gameState.player.direction];
-  const nextPosition = {
-    x: gameState.player.position.x + offset.x,
-    y: gameState.player.position.y + offset.y,
-  };
+  const nextPosition = getNextPosition(gameState.player.position, gameState.player.direction);
 
   if (!isInsideBoard(nextPosition, gameState.gridSize)) {
-    if (gameState.player.path.length > 0) {
-      return losePlayerLifeAndReset(gameState);
-    }
-
-    return gameState;
+    return {
+      ...gameState,
+      player: {
+        ...gameState.player,
+        direction: getNextInsideDirection(
+          gameState.player.position,
+          gameState.player.direction,
+          gameState.gridSize,
+        ),
+      },
+    };
   }
 
   const nextCell = gameState.grid[nextPosition.y]?.[nextPosition.x];
