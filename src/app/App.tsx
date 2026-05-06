@@ -1,89 +1,23 @@
-import { useEffect, useState } from 'react';
-import { characterData, type CharacterId } from '../characters/characterData';
+import { useState } from 'react';
 import { CharacterSelectPage } from '../characters/CharacterSelectPage';
 import { DifficultySelectPage } from '../game/components/DifficultySelectPage';
 import { GameScreen } from '../game/components/GameScreen';
-import {
-  calculateGameReward,
-  type GameRewardResult,
-  type GameSessionResultInput,
-} from '../game/engine/rewards';
 import { HomePage } from '../home/HomePage';
-import { loadPlayerSave, savePlayerSave, type PlayerSaveData } from '../storage/storage';
+import { usePlayerSave } from '../storage/usePlayerSave';
 import { routes, type AppRoute } from './routes';
 import type { Difficulty } from '../game/types';
 
 export function App() {
   const [screen, setScreen] = useState<AppRoute>(routes.home);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('easy');
-  const [saveData, setSaveData] = useState<PlayerSaveData>(() => loadPlayerSave());
-  const selectedCharacter =
-    characterData.find((character) => character.id === saveData.selectedCharacterId) ??
-    characterData[0];
-
-  useEffect(() => {
-    savePlayerSave(saveData);
-  }, [saveData]);
-
-  const selectCharacter = (characterId: CharacterId) => {
-    if (!saveData.ownedCharacterIds.includes(characterId)) {
-      return;
-    }
-
-    setSaveData((currentSave) => ({
-      ...currentSave,
-      selectedCharacterId: characterId,
-    }));
-  };
-
-  const unlockCharacter = (characterId: CharacterId) => {
-    setSaveData((currentSave) => {
-      const character = characterData.find((item) => item.id === characterId);
-      if (!character || currentSave.ownedCharacterIds.includes(characterId)) {
-        return currentSave;
-      }
-
-      if (currentSave.coins < character.unlockCost) {
-        return currentSave;
-      }
-
-      return {
-        ...currentSave,
-        coins: Math.max(0, currentSave.coins - character.unlockCost),
-        ownedCharacterIds: [...currentSave.ownedCharacterIds, characterId],
-        selectedCharacterId: characterId,
-      };
-    });
-  };
-
-  const grantDebugCoins = () => {
-    setSaveData((currentSave) => ({
-      ...currentSave,
-      coins: currentSave.coins + 100,
-    }));
-  };
-
-  const finishGameSession = (resultInput: GameSessionResultInput): GameRewardResult => {
-    const rewardResult = calculateGameReward({
-      ...resultInput,
-      previousBestScore: saveData.bestScoreByDifficulty[resultInput.difficulty],
-    });
-
-    setSaveData((currentSave) => ({
-      ...currentSave,
-      coins: currentSave.coins + rewardResult.earnedCoins,
-      bestScoreByDifficulty: {
-        ...currentSave.bestScoreByDifficulty,
-        [resultInput.difficulty]: Math.max(
-          currentSave.bestScoreByDifficulty[resultInput.difficulty],
-          rewardResult.finalOwnedRatio,
-        ),
-      },
-      totalPlayCount: currentSave.totalPlayCount + 1,
-    }));
-
-    return rewardResult;
-  };
+  const {
+    finishGameSession,
+    grantDebugCoins,
+    saveData,
+    selectCharacter,
+    selectedCharacter,
+    unlockCharacter,
+  } = usePlayerSave();
 
   if (screen === routes.characterSelect) {
     return (
@@ -93,7 +27,7 @@ export function App() {
         ownedCharacterIds={saveData.ownedCharacterIds}
         selectedCharacterId={saveData.selectedCharacterId}
         onBack={() => setScreen(routes.home)}
-        onGrantDebugCoins={grantDebugCoins}
+        onGrantDebugCoins={import.meta.env.DEV ? grantDebugCoins : undefined}
         onSelectCharacter={selectCharacter}
         onStartGame={() => setScreen(routes.difficultySelect)}
         onUnlockCharacter={unlockCharacter}
@@ -120,7 +54,7 @@ export function App() {
         ownedCharacterIds={saveData.ownedCharacterIds}
         selectedCharacterId={saveData.selectedCharacterId}
         onBack={() => setScreen(routes.home)}
-        onGrantDebugCoins={grantDebugCoins}
+        onGrantDebugCoins={import.meta.env.DEV ? grantDebugCoins : undefined}
         onSelectCharacter={selectCharacter}
         onUnlockCharacter={unlockCharacter}
       />

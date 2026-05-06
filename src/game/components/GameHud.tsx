@@ -4,10 +4,11 @@ type GameHudProps = {
   ownedRatio: number;
   targetRatio: number;
   lives: number;
+  coinPreview: number;
   character: Character;
 };
 
-export function GameHud({ ownedRatio, targetRatio, lives, character }: GameHudProps) {
+export function GameHud({ ownedRatio, targetRatio, lives, coinPreview, character }: GameHudProps) {
   return (
     <div className="game-hud" aria-label="게임 상태">
       <article>
@@ -21,6 +22,10 @@ export function GameHud({ ownedRatio, targetRatio, lives, character }: GameHudPr
       <article>
         <span>목숨</span>
         <strong>{lives}</strong>
+      </article>
+      <article>
+        <span>예상 코인</span>
+        <strong>{coinPreview}</strong>
       </article>
       <article className="game-hud__character">
         <span>친구</span>

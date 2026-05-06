@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Character } from '../../characters/characterData';
-import type { CellType, GameState } from '../types';
+import type { CellType, Direction, GameState, GridPosition } from '../types';
 
 type GameCanvasProps = {
   gameState: GameState;
@@ -38,6 +38,13 @@ const themeColorsByCharacter: Record<Character['id'], ThemeColors> = {
     path: '#94e7ee',
     pathAccent: '#f4fdff',
   },
+};
+
+const directionVector: Record<Direction, GridPosition> = {
+  up: { x: 0, y: -1 },
+  right: { x: 1, y: 0 },
+  down: { x: 0, y: 1 },
+  left: { x: -1, y: 0 },
 };
 
 function drawRoundedCell(
@@ -163,6 +170,7 @@ function drawPlayer(
 ) {
   const centerX = (gameState.player.position.x + 0.5) * cellSize;
   const centerY = (gameState.player.position.y + 0.5) * cellSize;
+  const direction = directionVector[gameState.player.direction];
 
   context.fillStyle = '#ffffff';
   context.shadowColor = 'rgba(80, 53, 34, 0.18)';
@@ -171,6 +179,26 @@ function drawPlayer(
   context.arc(centerX, centerY, cellSize * 0.68, 0, Math.PI * 2);
   context.fill();
   context.shadowBlur = 0;
+
+  const arrowTipX = centerX + direction.x * cellSize * 0.98;
+  const arrowTipY = centerY + direction.y * cellSize * 0.98;
+  const arrowBaseX = centerX + direction.x * cellSize * 0.5;
+  const arrowBaseY = centerY + direction.y * cellSize * 0.5;
+  const perpendicularX = -direction.y;
+  const perpendicularY = direction.x;
+  const arrowHalfWidth = cellSize * 0.22;
+
+  context.fillStyle = '#5c432f';
+  context.strokeStyle = '#ffffff';
+  context.lineWidth = Math.max(2, cellSize * 0.12);
+  context.lineJoin = 'round';
+  context.beginPath();
+  context.moveTo(arrowTipX, arrowTipY);
+  context.lineTo(arrowBaseX + perpendicularX * arrowHalfWidth, arrowBaseY + perpendicularY * arrowHalfWidth);
+  context.lineTo(arrowBaseX - perpendicularX * arrowHalfWidth, arrowBaseY - perpendicularY * arrowHalfWidth);
+  context.closePath();
+  context.stroke();
+  context.fill();
 
   context.font = `${Math.max(14, cellSize * 1.1)}px sans-serif`;
   context.textAlign = 'center';
@@ -256,6 +284,24 @@ function renderGameCanvas(
 export function GameCanvas({ gameState, character, onRotateDirection }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const latestGameStateRef = useRef(gameState);
+  const latestCharacterRef = useRef(character);
+  const displaySizeRef = useRef(0);
+
+  useEffect(() => {
+    latestGameStateRef.current = gameState;
+    latestCharacterRef.current = character;
+
+    const canvas = canvasRef.current;
+    const wrapper = wrapperRef.current;
+    const displaySize = displaySizeRef.current || wrapper?.clientWidth || 0;
+
+    if (!canvas || displaySize <= 0) {
+      return;
+    }
+
+    renderGameCanvas(canvas, gameState, character, displaySize);
+  }, [character, gameState]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -271,7 +317,8 @@ export function GameCanvas({ gameState, character, onRotateDirection }: GameCanv
         return;
       }
 
-      renderGameCanvas(canvas, gameState, character, displaySize);
+      displaySizeRef.current = displaySize;
+      renderGameCanvas(canvas, latestGameStateRef.current, latestCharacterRef.current, displaySize);
     };
 
     render();
@@ -282,7 +329,7 @@ export function GameCanvas({ gameState, character, onRotateDirection }: GameCanv
     return () => {
       resizeObserver.disconnect();
     };
-  }, [character, gameState]);
+  }, []);
 
   return (
     <div className="game-canvas-frame" ref={wrapperRef} onPointerDown={(event) => {

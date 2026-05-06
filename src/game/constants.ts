@@ -1,6 +1,7 @@
 import type { Difficulty } from './types';
 
 export const GRID_SIZE = 32;
+export const MALANGJELLY_PLAYER_SPEED_MULTIPLIER = 0.9;
 export const PENGUINKONG_ENEMY_SPEED_MULTIPLIER = 0.9;
 
 export type DifficultySettings = {

@@ -3,8 +3,7 @@ import {
   isCharacterId,
   type CharacterId,
 } from '../characters/characterData';
-
-export type Difficulty = 'easy' | 'normal' | 'hard';
+import type { Difficulty } from '../game/types';
 
 export type BestScoreByDifficulty = Record<Difficulty, number>;
 
@@ -17,6 +16,9 @@ export type PlayerSaveData = {
 };
 
 const STORAGE_KEY = 'pocketland.save.v1';
+const MAX_COINS = 999999;
+const MAX_BEST_SCORE = 100;
+const MAX_TOTAL_PLAY_COUNT = 99999;
 
 const defaultSaveData: PlayerSaveData = {
   coins: 0,
@@ -40,6 +42,14 @@ function toSafeNumber(value: unknown, fallback: number): number {
     : fallback;
 }
 
+function clampNumber(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function toClampedSafeNumber(value: unknown, fallback: number, min: number, max: number): number {
+  return clampNumber(toSafeNumber(value, fallback), min, max);
+}
+
 function normalizeOwnedCharacterIds(value: unknown): CharacterId[] {
   if (!Array.isArray(value)) {
     return defaultSaveData.ownedCharacterIds;
@@ -54,9 +64,9 @@ function normalizeBestScore(value: unknown): BestScoreByDifficulty {
   const score = isRecord(value) ? value : {};
 
   return {
-    easy: toSafeNumber(score.easy, 0),
-    normal: toSafeNumber(score.normal, 0),
-    hard: toSafeNumber(score.hard, 0),
+    easy: toClampedSafeNumber(score.easy, 0, 0, MAX_BEST_SCORE),
+    normal: toClampedSafeNumber(score.normal, 0, 0, MAX_BEST_SCORE),
+    hard: toClampedSafeNumber(score.hard, 0, 0, MAX_BEST_SCORE),
   };
 }
 
@@ -74,11 +84,16 @@ function normalizeSaveData(value: unknown): PlayerSaveData {
       : defaultCharacterId;
 
   return {
-    coins: toSafeNumber(value.coins, defaultSaveData.coins),
+    coins: toClampedSafeNumber(value.coins, defaultSaveData.coins, 0, MAX_COINS),
     ownedCharacterIds,
     selectedCharacterId,
     bestScoreByDifficulty: normalizeBestScore(value.bestScoreByDifficulty),
-    totalPlayCount: toSafeNumber(value.totalPlayCount, defaultSaveData.totalPlayCount),
+    totalPlayCount: toClampedSafeNumber(
+      value.totalPlayCount,
+      defaultSaveData.totalPlayCount,
+      0,
+      MAX_TOTAL_PLAY_COUNT,
+    ),
   };
 }
 
@@ -96,5 +111,9 @@ export function loadPlayerSave(): PlayerSaveData {
 }
 
 export function savePlayerSave(saveData: PlayerSaveData): void {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeSaveData(saveData)));
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeSaveData(saveData)));
+  } catch {
+    // 저장소가 차단되거나 용량을 초과해도 게임 진행은 유지한다.
+  }
 }

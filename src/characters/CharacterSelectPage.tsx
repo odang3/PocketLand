@@ -7,7 +7,7 @@ type CharacterSelectPageProps = {
   ownedCharacterIds: CharacterId[];
   selectedCharacterId: CharacterId;
   onBack: () => void;
-  onGrantDebugCoins: () => void;
+  onGrantDebugCoins?: () => void;
   onSelectCharacter: (characterId: CharacterId) => void;
   onUnlockCharacter: (characterId: CharacterId) => void;
   onStartGame?: () => void;
@@ -77,9 +77,11 @@ export function CharacterSelectPage({
           })}
         </div>
 
-        <button className="debug-coin-button" type="button" onClick={onGrantDebugCoins}>
-          개발용 +100 코인
-        </button>
+        {onGrantDebugCoins ? (
+          <button className="debug-coin-button" type="button" onClick={onGrantDebugCoins}>
+            개발용 +100 코인
+          </button>
+        ) : null}
 
         {isPlayMode ? (
           <button className="primary-button sticky-action" type="button" onClick={onStartGame}>
