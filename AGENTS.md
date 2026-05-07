@@ -384,5 +384,319 @@ When working on PocketLand UI redesign:
 4. After implementation, the implementer must write `docs/design/UI_IMPLEMENTATION_REPORT.md`.
 5. UI work is not complete until `npm run build` succeeds.
 
+---
+
+# Pocketland UI Asset Application Task
+
+## Current Task Goal
+
+이번 작업의 목표는 1~3차 포켓랜드 에셋 팩을 사용해서 기존 평면적인 UI를 고급 모바일 캐주얼 게임 UI처럼 개선하는 것이다.
+
+우선 적용 대상은 다음 두 화면이다.
+
+1. 홈 화면
+2. 캐릭터 도감 화면
+
+게임 플레이 화면은 이번 작업 범위에서 제외한다.
+
+---
+
+## Scope
+
+### Included
+
+이번 작업 범위는 다음과 같다.
+
+1. 에셋 ZIP 파일 압축 해제 및 폴더 구조 정리
+2. 포켓랜드 에셋 export 파일 생성
+3. 공통 게임 UI 스타일 생성
+4. 홈 화면 UI 고도화
+5. 캐릭터 도감 화면 UI 고도화
+6. 모바일 QA
+
+### Excluded
+
+이번 작업에서 제외할 항목은 다음과 같다.
+
+1. 게임 플레이 화면 수정
+2. 게임 로직 수정
+3. 인증 로직 수정
+4. 서버/API 수정
+5. 라우팅 구조 대규모 변경
+6. 상태 관리 구조 대규모 변경
+7. DB 또는 저장소 구조 변경
+
+---
+
+## Asset Packs
+
+프로젝트 루트에 아래 ZIP 파일 3개가 존재한다고 가정한다.
+
+```txt
+pocketland_asset_pack_phase1.zip
+pocketland_background_asset_pack_phase2.zip
+pocketland_asset_pack_phase3.zip
+```
+
+압축 해제 후 최종 에셋 구조는 아래와 같아야 한다.
+
+```txt
+src/assets/game/backgrounds/
+  home-sky-bg.webp
+  fantasy-island-stage.webp
+  cloud-left.webp
+  cloud-right.webp
+  castle-left.webp
+  castle-right.webp
+  balloon-pink.webp
+  balloon-blue.webp
+
+src/assets/game/characters/
+  ddangnyangi.webp
+  malang-jelly.webp
+  penguin-kong.webp
+  purple-enemy.webp
+  hamster-captain.webp
+  ghost-cat.webp
+  baby-dragon.webp
+
+src/assets/game/icons/
+  coin-paw.webp
+  trophy.webp
+  reward-chest.webp
+  territory-flag.webp
+  paw.webp
+
+src/assets/game/ui/
+  sparkle.webp
+```
+
+---
+
+## Required Asset Export File
+
+아래 파일을 생성해서 에셋을 한 곳에서 관리한다.
+
+```txt
+src/assets/game/index.ts
+```
+
+예상 export 객체는 다음과 같다.
+
+```txt
+gameCharacters
+gameBackgrounds
+gameIcons
+gameUi
+```
+
+화면 컴포넌트에서는 이미지 경로를 직접 길게 import하지 말고, 가능하면 `src/assets/game/index.ts`에서 export한 객체를 사용한다.
+
+---
+
+## Required Common Style File
+
+아래 파일을 생성해서 포켓랜드 전용 공통 게임 UI 스타일을 관리한다.
+
+```txt
+src/styles/gameTheme.css
+```
+
+필수 스타일 클래스는 다음과 같다.
+
+```txt
+pocket-screen
+game-panel
+game-button
+game-button--yellow
+game-button--green
+game-button--blue
+game-deco
+character-float
+```
+
+---
+
+## Work Order
+
+반드시 아래 순서로 작업한다.
+
+1. 프로젝트 구조 분석
+2. 에셋 ZIP 압축 해제 및 폴더 구조 정리
+3. `src/assets/game/index.ts` 생성
+4. `src/styles/gameTheme.css` 생성
+5. 홈 화면만 개선
+6. 사용자가 홈 화면을 확인한 뒤 캐릭터 도감 화면 개선
+7. 모바일 QA
+
+한 번에 전체 화면을 수정하지 않는다.
+
+---
+
+## Design Direction
+
+전체 디자인 방향은 다음과 같다.
+
+1. 밝은 판타지 하늘 배경
+2. 귀엽고 입체감 있는 캐릭터
+3. 둥근 모바일 캐주얼 게임 UI
+4. 글로시한 pill 형태 버튼
+5. 흰색 또는 크림색 카드
+6. 두꺼운 외곽선
+7. 부드러운 그림자
+8. 캐릭터 floating animation
+9. 한국어 텍스트 가독성 우선
+10. 출시된 모바일 캐주얼 게임 같은 완성도
+
+---
+
+## Important Rules
+
+다음 규칙을 반드시 지킨다.
+
+1. 기존 게임 로직은 건드리지 않는다.
+2. 기존 라우팅과 클릭 이벤트는 유지한다.
+3. 이미지 전체를 한 장 배경으로 깔지 않는다.
+4. 배경, 캐릭터, 아이콘은 이미지 에셋으로 사용한다.
+5. 버튼, 카드, 텍스트, 수치는 실제 React 컴포넌트로 유지한다.
+6. 모바일 375px~430px 폭을 우선 기준으로 한다.
+7. 홈 화면이 통과되기 전에는 캐릭터 도감 화면을 수정하지 않는다.
+8. 게임 플레이 화면은 이번 작업에서 수정하지 않는다.
+9. 서버/API/DB 관련 코드는 수정하지 않는다.
+10. 작업 완료 후 변경 파일과 확인 방법을 반드시 보고한다.
+
+---
+
+## Home Screen Requirements
+
+홈 화면 개선 시 아래 에셋을 사용한다.
+
+```txt
+gameBackgrounds.homeSky
+gameBackgrounds.fantasyIslandStage
+gameBackgrounds.cloudLeft
+gameBackgrounds.cloudRight
+gameBackgrounds.balloonPink
+gameBackgrounds.balloonBlue
+gameUi.sparkle
+
+gameCharacters.ddangnyangi
+gameCharacters.malangJelly
+gameCharacters.penguinKong
+
+gameIcons.coinPaw
+gameIcons.trophy
+gameIcons.rewardChest
+gameIcons.paw
+gameIcons.territoryFlag
+```
+
+홈 화면 구현 요구사항은 다음과 같다.
+
+1. `home-sky-bg.webp`를 홈 화면 전체 배경으로 적용한다.
+2. 구름, 풍선, sparkle을 장식 레이어로 배치한다.
+3. `fantasy-island-stage.webp`를 캐릭터 아래 스테이지로 배치한다.
+4. 땅냥이, 말랑젤리, 펭귄콩을 중앙에 크게 배치한다.
+5. 캐릭터 아래에 이름표를 표시한다.
+6. 캐릭터에 drop-shadow와 floating animation을 적용한다.
+7. 코인, 트로피, 보상 아이콘을 에셋으로 교체한다.
+8. 플레이하기, 캐릭터 도감, 미션 보기 버튼을 입체형 게임 버튼으로 개선한다.
+9. 최고 점령률 카드와 오늘의 보상 카드를 `game-panel` 스타일로 개선한다.
+10. 기존 클릭 이벤트와 라우팅은 유지한다.
+
+---
+
+## Character Collection Screen Requirements
+
+캐릭터 도감 화면은 홈 화면 확인이 끝난 뒤 작업한다.
+
+사용 캐릭터 에셋은 다음과 같다.
+
+```txt
+gameCharacters.ddangnyangi
+gameCharacters.malangJelly
+gameCharacters.penguinKong
+gameCharacters.hamsterCaptain
+gameCharacters.ghostCat
+gameCharacters.babyDragon
+```
+
+사용 아이콘은 다음과 같다.
+
+```txt
+gameIcons.coinPaw
+gameIcons.paw
+gameIcons.rewardChest
+```
+
+캐릭터 도감 구현 요구사항은 다음과 같다.
+
+1. 캐릭터 데이터를 배열 기반으로 관리한다.
+2. `CharacterCard` 컴포넌트를 생성 또는 개선한다.
+3. `FeaturedCharacterPanel` 컴포넌트를 생성 또는 개선한다.
+4. 희귀도 배지를 표시한다.
+5. 보유/미보유 상태를 표시한다.
+6. 조각 진행도 progress를 표시한다.
+7. 수집 현황 `2 / 6`을 표시한다.
+8. 보상 상자 아이콘을 표시한다.
+9. 하단 네비게이션에서 캐릭터 도감 탭 선택 상태를 표시한다.
+10. 홈 화면과 동일한 라운드, 그림자, 색감, 버튼 스타일을 유지한다.
+
+---
+
+## Character Data
+
+캐릭터 데이터는 아래 내용을 기준으로 구성한다.
+
+```txt
+땅냥이 / 노말 / 공격형 / 랜덤 블록 3개를 제거해요! / 보유
+말랑젤리 / 노말 / 지원형 / 주변 블록을 말랑말랑하게 만들어요! / 보유
+펭귄콩 / 레어 / 마법형 / 가로 3칸을 얼려 방해를 제거해요! / 20/50
+햄찌대장 / 에픽 / 공격형 / 가장 많은 블록을 한 번에 제거해요! / 10/30
+유령냥 / 에픽 / 소환형 / 랜덤으로 블록을 소환해요! / 5/30
+용용이 / 에픽 / 공격형 / 가로·세로 폭발을 일으켜요! / 0/30
+```
+
+---
+
+## Mobile QA Requirements
+
+홈 화면과 캐릭터 도감 화면 작업 후 아래 해상도를 기준으로 QA한다.
+
+```txt
+360 x 740
+375 x 812
+390 x 844
+414 x 896
+430 x 932
+```
+
+확인 항목은 다음과 같다.
+
+1. 캐릭터 이미지가 잘리지 않는지 확인한다.
+2. 배경이 찌그러지지 않는지 확인한다.
+3. 버튼이 화면 밖으로 밀리지 않는지 확인한다.
+4. 텍스트 줄바꿈이 이상하지 않은지 확인한다.
+5. 하단 메뉴가 모바일 안전 영역에 걸리지 않는지 확인한다.
+6. 기존 페이지 이동이 정상 동작하는지 확인한다.
+7. 콘솔 에러가 없는지 확인한다.
+8. 이미지 용량 때문에 렌더링이 느려지지 않는지 확인한다.
+
+가능하면 CSS에서 `safe-area-inset-bottom`을 고려한다.
+
+---
+
+## Completion Report Format
+
+각 단계 완료 후 아래 형식으로 보고한다.
+
+1. 작업 요약
+2. 변경 파일 목록
+3. 추가 파일 목록
+4. 사용한 에셋 목록
+5. 기존 기능 영향 여부
+6. 확인 방법
+7. 남은 TODO
+
 ## !!
 - 모든 답변은 반드시 한국어로 해.
