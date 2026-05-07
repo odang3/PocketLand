@@ -203,3 +203,394 @@
     padding-left: 16px;
   }
 }
+
+.pocket-home-screen {
+  display: flex;
+  min-height: 100dvh;
+  align-items: stretch;
+  justify-content: center;
+  padding: max(14px, env(safe-area-inset-top)) 12px max(14px, env(safe-area-inset-bottom));
+  background-image:
+    linear-gradient(180deg, rgba(112, 202, 255, 0.1), rgba(255, 246, 218, 0.2)),
+    var(--pocket-home-bg);
+  background-position: center top;
+  background-size: cover;
+}
+
+.pocket-home-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(100%, 430px);
+  min-height: calc(100dvh - max(28px, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
+  align-content: start;
+  gap: 10px;
+}
+
+.pocket-home-topbar {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.pocket-home-coin {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 13px 5px 7px;
+  border-width: 3px;
+  border-radius: 999px;
+}
+
+.pocket-home-coin::after {
+  border-radius: 999px;
+}
+
+.pocket-home-coin img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 0 rgba(94, 58, 29, 0.12));
+}
+
+.pocket-home-coin div {
+  display: grid;
+  gap: 1px;
+}
+
+.pocket-home-coin span,
+.pocket-home-info-card span {
+  color: var(--game-muted);
+  font-size: 0.72rem;
+  font-weight: 1000;
+  line-height: 1.1;
+}
+
+.pocket-home-coin strong,
+.pocket-home-info-card strong {
+  color: var(--game-ink);
+  font-size: 1rem;
+  font-weight: 1000;
+  line-height: 1.1;
+}
+
+.pocket-home-title {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  padding-top: 2px;
+  text-align: center;
+}
+
+.pocket-home-eyebrow {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border: 2px solid rgba(91, 58, 39, 0.26);
+  border-radius: 999px;
+  color: #267163;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 -3px 0 rgba(72, 145, 129, 0.1);
+  font-size: 0.76rem;
+  font-weight: 1000;
+}
+
+.pocket-home-eyebrow img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.pocket-home-title h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2.75rem, 14vw, 4.2rem);
+  font-weight: 1000;
+  line-height: 0.92;
+  text-shadow:
+    0 3px 0 #3c9c8e,
+    0 7px 0 rgba(43, 118, 109, 0.24),
+    0 14px 24px rgba(44, 116, 142, 0.22);
+}
+
+.pocket-home-title > strong {
+  color: #513725;
+  font-size: 1.05rem;
+  font-weight: 1000;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.58);
+}
+
+.pocket-home-title p {
+  max-width: 280px;
+  margin: 0;
+  color: #4f725c;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.35;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.pocket-home-stage {
+  position: relative;
+  height: clamp(205px, 34dvh, 288px);
+  margin-top: 2px;
+}
+
+.pocket-home-stage__island {
+  position: absolute;
+  right: 50%;
+  bottom: -4px;
+  width: min(112%, 480px);
+  max-width: none;
+  transform: translateX(50%);
+  filter: drop-shadow(0 15px 16px rgba(61, 111, 77, 0.2));
+  pointer-events: none;
+  user-select: none;
+}
+
+.pocket-home-character {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  margin: 0;
+}
+
+.pocket-home-character img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.pocket-home-character figcaption {
+  min-width: 64px;
+  padding: 4px 8px;
+  border: 2px solid rgba(91, 58, 39, 0.28);
+  border-radius: 999px;
+  color: #523827;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow:
+    inset 0 -3px 0 rgba(92, 58, 39, 0.08),
+    0 5px 10px rgba(72, 126, 128, 0.12);
+  font-size: 0.72rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-align: center;
+}
+
+.pocket-home-character--cat {
+  right: 50%;
+  bottom: 33px;
+  width: clamp(122px, 38vw, 156px);
+  transform: translateX(50%);
+  animation-duration: 3000ms;
+}
+
+.pocket-home-character--jelly {
+  bottom: 22px;
+  left: 3%;
+  width: clamp(86px, 27vw, 116px);
+  animation-delay: 180ms;
+}
+
+.pocket-home-character--penguin {
+  right: 2%;
+  bottom: 20px;
+  width: clamp(88px, 28vw, 118px);
+  animation-delay: 360ms;
+}
+
+.pocket-home-actions {
+  display: grid;
+  gap: 9px;
+}
+
+.pocket-home-actions .game-button {
+  width: 100%;
+}
+
+.pocket-home-actions .game-button img {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 0 rgba(91, 58, 39, 0.12));
+}
+
+.pocket-home-actions .game-button > span,
+.pocket-home-actions .game-button {
+  position: relative;
+  z-index: 1;
+}
+
+.pocket-home-play {
+  min-height: 62px;
+  font-size: 1.12rem;
+}
+
+.pocket-home-secondary-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pocket-home-secondary-actions .game-button {
+  min-height: 54px;
+  padding-right: 9px;
+  padding-left: 9px;
+  font-size: 0.83rem;
+}
+
+.pocket-home-secondary-actions .game-button span {
+  display: grid;
+  gap: 1px;
+  line-height: 1.05;
+}
+
+.pocket-home-secondary-actions .game-button small {
+  color: rgba(77, 53, 36, 0.68);
+  font-size: 0.66rem;
+  font-weight: 1000;
+}
+
+.pocket-home-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-bottom: 2px;
+}
+
+.pocket-home-info-card {
+  display: flex;
+  min-width: 0;
+  min-height: 72px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 11px;
+  border-width: 3px;
+  border-radius: 20px;
+}
+
+.pocket-home-info-card--wide {
+  grid-column: 1 / -1;
+}
+
+.pocket-home-info-card img {
+  position: relative;
+  z-index: 1;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 0 rgba(91, 58, 39, 0.1));
+}
+
+.pocket-home-info-card div {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.pocket-home-info-card strong {
+  overflow-wrap: anywhere;
+}
+
+.pocket-home-deco {
+  opacity: 0.98;
+}
+
+.pocket-home-deco--cloud-left {
+  top: 84px;
+  left: -28px;
+  width: 126px;
+}
+
+.pocket-home-deco--cloud-right {
+  top: 52px;
+  right: -32px;
+  width: 132px;
+}
+
+.pocket-home-deco--balloon-pink {
+  top: 168px;
+  left: 12px;
+  width: 46px;
+}
+
+.pocket-home-deco--balloon-blue {
+  top: 124px;
+  right: 16px;
+  width: 48px;
+}
+
+.pocket-home-deco--sparkle-one {
+  top: 218px;
+  left: 52px;
+  width: 28px;
+}
+
+.pocket-home-deco--sparkle-two {
+  top: 222px;
+  right: 58px;
+  width: 24px;
+  transform: rotate(18deg);
+}
+
+@media (max-width: 370px) {
+  .pocket-home-content {
+    gap: 8px;
+  }
+
+  .pocket-home-stage {
+    height: 196px;
+  }
+
+  .pocket-home-character--cat {
+    width: 120px;
+  }
+
+  .pocket-home-character--jelly,
+  .pocket-home-character--penguin {
+    width: 84px;
+  }
+
+  .pocket-home-info-card {
+    min-height: 66px;
+    padding: 9px;
+  }
+
+  .pocket-home-info-card img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-height: 760px) {
+  .pocket-home-title h1 {
+    font-size: clamp(2.5rem, 13vw, 3.6rem);
+  }
+
+  .pocket-home-title p {
+    display: none;
+  }
+
+  .pocket-home-stage {
+    height: 196px;
+  }
+
+  .pocket-home-play {
+    min-height: 56px;
+  }
+
+  .pocket-home-info-card {
+    min-height: 64px;
+  }
+}
